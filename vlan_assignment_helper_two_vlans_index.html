@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Practical 10 – VLAN IP Generator</title>
+  <style>
+    :root{--bg:#0b1220;--panel:#121a2b;--text:#eaf2ff;--accent:#6aa5ff;--muted:#9fb3e8}
+    *{box-sizing:border-box}
+    body{margin:0;background:#0b1220;color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    .wrap{max-width:1000px;margin:40px auto;padding:0 16px}
+    h1{font-size:24px;margin:0 0 10px;font-weight:700;color:#6aa5ff}
+    h2{font-size:16px;font-weight:500;margin:0 0 20px;color:var(--muted)}
+    .card{background:#121a2b;border:1px solid #1e2740;border-radius:14px;padding:16px}
+    label{display:block;margin:0 0 8px;font-weight:600;color:#cfe0ff}
+    input{width:100%;background:#0c1322;border:1px solid #223154;border-radius:10px;color:var(--text);padding:12px;font-size:14px;outline:none}
+    input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(106,165,255,.25)}
+    .btn{margin-top:12px;background:#2b68ff;border:none;border-radius:10px;color:#fff;font-weight:700;padding:12px 14px;cursor:pointer}
+    .muted{color:var(--muted);font-size:12px;margin-top:6px}
+    table{width:100%;border-collapse:separate;border-spacing:0 8px;margin-top:12px}
+    th,td{padding:10px 12px;text-align:left}
+    th{font-size:12px;color:#cfe0ff;text-transform:uppercase;letter-spacing:.6px}
+    tr{background:#0e1627;border:1px solid #1e2740}
+    tr td:first-child, tr th:first-child{border-top-left-radius:10px;border-bottom-left-radius:10px}
+    tr td:last-child, tr th:last-child{border-top-right-radius:10px;border-bottom-right-radius:10px}
+    .tables{display:grid;grid-template-columns:1fr;gap:16px}
+    @media(min-width:900px){.tables{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Practical 10: To implement and simulate VLAN (Virtual LAN) in Packet Tracer</h1>
+    <h2>For network segmentation and verifying inter‑VLAN communication using a router</h2>
+
+    <div class="card">
+      <p>🔹 <b>To generate your unique IP addresses and VLAN numbers</b>, enter your Student Number below and click <b>Generate</b>.</p>
+      <label for="student">Enter Your Student Number:</label>
+      <input id="student" placeholder="e.g., 202351045" />
+      <button class="btn" onclick="compute()">Generate</button>
+      <div class="muted">Rule: VLAN‑1 octet = (10 AND XY), VLAN‑2 octet = (20 OR XY). Here XY are the last two digits of your Student Number.</div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <h2>Generated VLAN and IP Address Details</h2>
+      <div class="muted">Two separate tables are generated for <b>VLAN‑1</b> and <b>VLAN‑2</b> with their PC configurations.</div>
+      <div class="tables">
+        <div>
+          <h3 style="margin:6px 0 0;color:#cfe0ff;font-size:14px">VLAN‑1 Configuration</h3>
+          <table>
+            <thead>
+              <tr><th>Field</th><th>Value</th></tr>
+            </thead>
+            <tbody id="out1"><tr><td colspan="2" class="muted">No data yet.</td></tr></tbody>
+          </table>
+        </div>
+        <div>
+          <h3 style="margin:6px 0 0;color:#cfe0ff;font-size:14px">VLAN‑2 Configuration</h3>
+          <table>
+            <thead>
+              <tr><th>Field</th><th>Value</th></tr>
+            </thead>
+            <tbody id="out2"><tr><td colspan="2" class="muted">No data yet.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const ALLOWED = new Set(["202351001","202351002","202351003","202351004","202351005","202351006","202351007","202351008","202351009","202351010","202351011","202351012","202351013","202351014","202351015","202351016","202351017","202351018","202351019","202351020","202351021","202351022","202351023","202351024","202351025","202351026","202351027","202351028","202351029","202351030","202351031","202351032","202351033","202351034","202351035","202351036","202351037","202351038","202351039","202351040","202351041","202351042","202351043","202351044","202351045","202351046","202351047","202351048","202351049","202351050","202351051","202351052","202351053","202351054","202351055","202351056","202351057","202351058","202351059","202351060","202351062","202351063","202351064","202351065","202351067","202351068","202351069","202351070","202351071","202351072","202351073","202351074","202351075","202351076","202351077","202351078","202351079","202351080","202351081","202351082","202351083","202351084","202351085","202351086","202351087","202351088","202351089","202351090","202351092","202351093","202351094","202351095","202351096","202351097","202351098","202351099","202351100","202351101","202351102","202351103","202351104","202351105","202351106","202351107","202351108","202351109","202351110","202351112","202351113","202351114","202351115","202351116","202351117","202351118","202351119","202351120","202351121","202351122","202351123","202351124","202351125","202351126","202351127","202351128","202351129","202351130","202351131","202351132","202351134","202351135","202351136","202351137","202351138","202351139","202351140","202351141","202351142","202351143","202351144","202351145","202351146","202351147","202351148","202351149","202351150","202351151","202351152","202351154","202351156","202351157","202351158","202351159","202351160","202351161","202351162","202351163","202351164","202351165","202351167","202351168","202351169","202351170","202351172","202351173","202351174","202352301","202352302","202352304","202352305","202352306","202352307","202352308","202352310","202352311","202352313","202352314","202352315","202352316","202352317","202352318","202352319","202352320","202352321","202352322","202352323","202352324","202352325","202352326","202352327","202352328","202352329","202352330","202352331","202352332","202352333","202352334","202352336","202352337","202352338","202352339","202352340"]);
+  const clamp = n => { n &= 255; if(n===0||n===255){ n = (n+2) & 255; if(n===0||n===255) n=2; } return n; };
+  function xyFrom(id){ const m=String(id).match(/([0-9]{2})$/); return m?parseInt(m[1],10):NaN; }
+  function compute(){
+    const sid=document.getElementById('student').value.trim();
+    // Basic format & whitelist checks
+    if(!(sid.length===9 && Array.from(sid).every(ch=>ch>='0' && ch<='9'))){
+      out1.innerHTML='<tr><td colspan="2">Invalid format. Use your 9-digit student number.</td></tr>';
+      out2.innerHTML='<tr><td colspan="2">Invalid format. Use your 9-digit student number.</td></tr>';
+      return;
+    }
+    if(!ALLOWED.has(sid)){
+      out1.innerHTML='<tr><td colspan="2">This student number is not authorized for this practical.</td></tr>';
+      out2.innerHTML='<tr><td colspan="2">This student number is not authorized for this practical.</td></tr>';
+      return;
+    }
+    const xy=xyFrom(sid);
+
+
+    // Bitwise Rule
+    const octA = clamp(10 & xy); // VLAN‑1 host octet
+    const octB = clamp(20 | xy); // VLAN‑2 host octet
+
+    const vlan1 = 10 + xy;
+    const vlan2 = 20 + xy;
+
+    const subnet1 = `192.168.${octA}.0/24`;
+    const subnet2 = `192.168.${octB}.0/24`;
+    const gw1 = `192.168.${octA}.1`;
+    const gw2 = `192.168.${octB}.1`;
+
+    const PC0 = `192.168.${octA}.11`;
+    const PC1 = `192.168.${octA}.12`;
+    const PC2 = `192.168.${octB}.21`;
+    const PC3 = `192.168.${octB}.22`;
+
+    out1.innerHTML = `
+      <tr><td>Student Number</td><td>${sid}</td></tr>
+      <tr><td>VLAN‑1 ID</td><td>${vlan1}</td></tr>
+      <tr><td>VLAN‑1 Subnet</td><td>${subnet1}</td></tr>
+      <tr><td>Default Gateway</td><td>${gw1}</td></tr>
+      <tr><td>PC0 IP</td><td>${PC0}</td></tr>
+      <tr><td>PC1 IP</td><td>${PC1}</td></tr>`;
+
+    out2.innerHTML = `
+      <tr><td>Student Number</td><td>${sid}</td></tr>
+      <tr><td>VLAN‑2 ID</td><td>${vlan2}</td></tr>
+      <tr><td>VLAN‑2 Subnet</td><td>${subnet2}</td></tr>
+      <tr><td>Default Gateway</td><td>${gw2}</td></tr>
+      <tr><td>PC2 IP</td><td>${PC2}</td></tr>
+      <tr><td>PC3 IP</td><td>${PC3}</td></tr>`;
+  }
+</script>
+</body>
+</html>
